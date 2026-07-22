@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>BLKOWNED · Board Strategy 2026–2028</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0D0D0D;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;color:#F0F0F0}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-thumb{background:#2a2a2a;border-radius:2px}
+input[type=range]{cursor:pointer;width:100%;accent-color:#C9A84C}
+@media(max-width:768px){.sidebar{display:none}.main-content{margin-left:0!important}}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const {useState,useEffect} = React;
+const G="#C9A84C",N="#1B2B4B",M="#4A5568",L="#EFF3F8",W="#FFFFFF",LG="#D9E2ED";
+
+const sections = [
+  {id:"overview",label:"Overview"},
+  {id:"grants",label:"Grant Strategy"},
+  {id:"programs",label:"Program Strategy"},
+  {id:"earnedrev",label:"Earned Revenue"},
+  {id:"platform",label:"Community Platform 2.0"},
+  {id:"resourcing",label:"Resourcing"},
+  {id:"partnerships",label:"Partnerships"},
+  {id:"financial",label:"Financial Infrastructure"},
+  {id:"roadmap",label:"24-Month Roadmap"},
+];
+
+function Tag({children,color="#C9A84C",bg="rgba(201,168,76,0.12)"}) {
+  return <span style={{fontSize:10,fontWeight:700,letterSpacing:1,color,background:bg,border:`1px solid ${color}`,borderRadius:20,padding:"2px 10px",whiteSpace:"nowrap"}}>{children}</span>;
+}
+function SectionTitle({children}) {
+  return <div style={{marginBottom:20}}>
+    <div style={{fontSize:22,fontWeight:800,color:"#EEE",marginBottom:8}}>{children}</div>
+    <div style={{height:3,width:60,background:G,borderRadius:2}}/>
+  </div>;
+}
+function SubTitle({children,color=G}) {
+  return <div style={{fontSize:15,fontWeight:700,color,marginTop:20,marginBottom:8}}>{children}</div>;
+}
+function Body({children}) {
+  return <p style={{fontSize:13,color:"#B0B0C8",lineHeight:1.7,marginBottom:12}}>{children}</p>;
+}
+function Bullet({children,bold=false}) {
+  return <div style={{display:"flex",gap:8,marginBottom:6,alignItems:"flex-start"}}>
+    <span style={{color:G,fontSize:11,marginTop:3,minWidth:8}}>▸</span>
+    <span style={{fontSize:13,color:bold?"#EEE":M,lineHeight:1.5,fontWeight:bold?700:400}}>{children}</span>
+  </div>;
+}
+function Card({children,style={}}) {
+  return <div style={{background:"#141414",border:"1px solid #222",borderRadius:12,padding:18,marginBottom:12,...style}}>{children}</div>;
+}
+function Row({items}) {
+  return <div style={{display:"grid",gridTemplateColumns:`repeat(${items.length},1fr)`,gap:10,marginBottom:12}}>
+    {items.map((it,i)=><div key={i} style={{background:"#0D0D0D",borderRadius:10,padding:"14px 12px",textAlign:"center",border:"1px solid #1e1e1e"}}>
+      <div style={{fontSize:20,fontWeight:800,color:it.color||G}}>{it.val}</div>
+      <div style={{fontSize:11,color:"#555",marginTop:4}}>{it.label}</div>
+    </div>)}
+  </div>;
+}
+function GTable({headers,rows,shade=true}) {
+  return <div style={{borderRadius:10,overflow:"hidden",marginBottom:16}}>
+    <div style={{display:"grid",gridTemplateColumns:headers.map(h=>h.w||"1fr").join(" "),background:N,borderBottom:"1px solid #263D6B"}}>
+      {headers.map((h,i)=><div key={i} style={{padding:"10px 12px",fontSize:11,fontWeight:700,color:G,letterSpacing:1}}>{h.label}</div>)}
+    </div>
+    {rows.map((row,ri)=><div key={ri} style={{display:"grid",gridTemplateColumns:headers.map(h=>h.w||"1fr").join(" "),background:shade&&ri%2===0?"#111":"transparent",borderBottom:"1px solid #1a1a1a"}}>
+      {row.map((cell,ci)=><div key={ci} style={{padding:"9px 12px",fontSize:12,color:ci===0?"#DDD":M,fontWeight:ci===0?600:400,lineHeight:1.4}}>{cell}</div>)}
+    </div>)}
+  </div>;
+}
+
+// ── SECTIONS ─────────────────────────────────────────────────────────
+
+function Overview() {
+  return <div>
+    <div style={{background:"linear-gradient(135deg,#1B2B4B,#0D1a2a)",border:"1px solid #C9A84C",borderRadius:14,padding:22,marginBottom:24}}>
+      <div style={{fontSize:11,color:"#C9A84C",fontWeight:700,letterSpacing:2,marginBottom:10}}>START HERE</div>
+      <div style={{fontSize:17,fontWeight:800,color:"#EEE",marginBottom:12}}>What this is and how to use it</div>
+      <div style={{fontSize:13,color:"#B0C0D8",lineHeight:1.7,marginBottom:12}}>This site is a strategic reference document for the BLKOWNED board, covering everything the organisation needs to grow and sustain itself over the next two years. It covers four connected areas: how to pursue grants, how to run our programs, how to generate revenue without relying only on grants, and how to build the right partnerships. Each section has its own page — use the menu on the left to navigate.</div>
+      <div style={{fontSize:13,color:"#B0C0D8",lineHeight:1.7,marginBottom:12}}>You do not need to read this all at once. If you are short on time, start with the Overview (you are here), then jump to whichever section is most relevant to what you are working on. Every section is written in plain language and explains the reasoning behind each recommendation, not just the recommendation itself.</div>
+      <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:10,marginTop:4}}>
+        {[
+          {t:"Most urgent action",d:"Apply to the Black Opportunity Fund and OTF Seed Grant to fund a part-time Grants Coordinator. This one hire unlocks everything else."},
+          {t:"Most important decision",d:"Should the Community Platform be built custom by the MBA students, or built on Slack and Claude? The board needs to decide this before development goes further."},
+          {t:"Biggest opportunity",d:"AI for All, Canada’s new national AI strategy, creates direct funding pathways for exactly what BLKOWNED does. The window to position for that funding is now."},
+        ].map((s,i)=><div key={i} style={{background:"rgba(0,0,0,0.3)",borderRadius:8,padding:12}}>
+          <div style={{fontSize:11,color:"#C9A84C",fontWeight:700,marginBottom:4}}>{s.t.toUpperCase()}</div>
+          <div style={{fontSize:12,color:"#8090A8",lineHeight:1.5}}>{s.d}</div>
+        </div>)}
+      </div>
+    </div>
+
+    <SectionTitle>The Integrated Strategy</SectionTitle>
+    <Body>This document covers all nine dimensions of BLKOWNED's organisational strategy for 2026–2028. The four strategies — grants, programs, resourcing, and partnerships — are not parallel tracks. They form a single flywheel: a stronger program generates better outcomes data, which strengthens grant applications, which delivers more funding, which enables better resourcing, which deepens partnerships, which strengthens the program further.</Body>
+    <Body>The bottleneck in the flywheel is always the same: organisational capacity. BLKOWNED has the community authenticity, the program track record, and now the evidence-based model. What hasn't yet kept pace is the administrative infrastructure that makes the flywheel self-sustaining. This strategy is designed to close that gap methodically.</Body>
+
+    <Row items={[
+      {val:"175+",label:"Businesses Supported",color:G},
+      {val:"280",label:"Community Members",color:G},
+      {val:"9,000+",label:"Supporter Network",color:G},
+      {val:"4 Years",label:"Trailblazer Track Record",color:G},
+    ]}/>
+
+    <Card style={{background:"linear-gradient(135deg,#0D0D0D,#0D1a0D)",border:"1px solid #2a3a2a",marginBottom:16}}>
+      <div style={{fontSize:10,color:"#4CAF50",fontWeight:700,letterSpacing:2,marginBottom:6}}>EXTERNAL VALIDATION — RUFFOLO + MURCHISON, JULY 14 2026</div>
+      <Body>John Ruffolo (Maverix Private Equity, formerly OMERS Ventures) and Michael Murchison (founder of Ada) published a critique of AI for All that sharpens the case for BLKOWNED's approach. Key findings: SME AI adoption in Canada sits at 8%, not 12%. Nordic front-runners are already at 29 to 42 per cent. Germany is at 26, France at 18. Canada is not closing the gap — it risks codifying it. Among Black-owned SMEs, the adoption gap is almost certainly wider still. This is the precise problem BLKOWNED exists to solve, and it is now documented by Canada's most prominent tech capital allocators.</Body>
+      <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:8}}>
+        {[
+          {val:"8%",label:"Canadian SME AI adoption",color:"#FF6B6B"},
+          {val:"29–42%",label:"Nordic SME front-runners",color:"#4CAF50"},
+          {val:"26%",label:"Germany SME adoption",color:"#7C9FFF"},
+          {val:"60%",label:"Canada's 2034 target",color:G},
+        ].map((s,i)=><div key={i} style={{background:"#0D0D0D",borderRadius:8,padding:"10px 10px",textAlign:"center",border:"1px solid #1a2a1a"}}>
+          <div style={{fontSize:18,fontWeight:800,color:s.color}}>{s.val}</div>
+          <div style={{fontSize:10,color:"#555",marginTop:3}}>{s.label}</div>
+        </div>)}
+      </div>
+    </Card>
+
+    <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:10,marginBottom:16}}>
+      {[
+        {n:"01",t:"Grant Strategy",d:"Portfolio, sequencing, stacking across 3 tiers"},
+        {n:"02",t:"Program Strategy",d:"4-rung ladder anchored by the Trailblazer Residency"},
+        {n:"03",t:"Earned Revenue",d:"ERG events, directory monetisation, supply chain"},
+        {n:"04",t:"Community Platform",d:"McMaster MBA upgrade, Slack + AI, subscription model"},
+        {n:"05",t:"Resourcing",d:"3-phase staffing plan funded by grants"},
+        {n:"06",t:"Partnerships",d:"Academic, corporate, government, and ecosystem tiers"},
+      ].map((s,i)=><div key={i} style={{background:N,borderRadius:10,padding:16}}>
+        <div style={{fontSize:22,fontWeight:900,color:G,marginBottom:4}}>{s.n}</div>
+        <div style={{fontSize:13,fontWeight:700,color:"#EEE",marginBottom:4}}>{s.t}</div>
+        <div style={{fontSize:11,color:"#7A8FAA"}}>{s.d}</div>
+      </div>)}
+    </div>
+
+    <Card style={{borderLeft:`3px solid ${G}`}}>
+      <SubTitle children="The Organising Thesis"/>
+      <Body>BLKOWNED doesn't train Black entrepreneurs. We build alongside them — with the mentors, the AI tools, and the community infrastructure they needed years ago but couldn't access. By the time a Trailblazer Resident graduates, their business already runs differently than when they arrived. That's not a course completion. That's a transformation.</Body>
+    </Card>
+  </div>;
+}
+
+function Grants() {
+  return <div>
+    <SectionTitle>Grant Strategy</SectionTitle>
+    <Body>Stop treating grants as individual applications. Start treating the grant portfolio as an interconnected funding system with three tiers, each serving a different purpose and operating on a different timeline.</Body>
+
+    <SubTitle>The Three-Tier Portfolio</SubTitle>
+    <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:10,marginBottom:20}}>
+      {[
+        {tier:"Tier 1",name:"Capacity Grants",ex:"OTF, BOF, Salesforce.org",purpose:"Fund BLKOWNED's ability to operate and grow. Pay for staff, systems, and infrastructure. Unrestricted or lightly restricted.",amount:"$50K–$600K/yr",color:"#4CAF50"},
+        {tier:"Tier 2",name:"Program Delivery",ex:"BEP, CanCode, AI for All, FedDev",purpose:"Fund the Trailblazer Residency and AI literacy programming directly. Outcome-tied — require measurable results reported against milestones.",amount:"$125K–$3M/project",color:G},
+        {tier:"Tier 3",name:"Research Grants",ex:"SSHRC via McMaster",purpose:"Fund the evidence base that makes BLKOWNED fundable at higher levels. Almost no Black entrepreneurship program accesses this — and it generates publishable data.",amount:"$25K–$200K/yr",color:"#7C9FFF"},
+      ].map((t,i)=><div key={i} style={{background:"#141414",border:`1px solid #222`,borderTop:`3px solid ${t.color}`,borderRadius:12,padding:16}}>
+        <div style={{fontSize:10,color:t.color,letterSpacing:1,fontWeight:700,marginBottom:4}}>{t.tier}</div>
+        <div style={{fontSize:14,fontWeight:700,color:"#EEE",marginBottom:4}}>{t.name}</div>
+        <div style={{fontSize:11,color:"#555",marginBottom:8,fontStyle:"italic"}}>{t.ex}</div>
+        <div style={{fontSize:12,color:M,lineHeight:1.5,marginBottom:10}}>{t.purpose}</div>
+        <div style={{fontSize:14,fontWeight:700,color:t.color}}>{t.amount}</div>
+      </div>)}
+    </div>
+
+    <SubTitle>Active Grant Portfolio</SubTitle>
+    <GTable
+      headers={[{label:"PROGRAM",w:"2fr"},{label:"AMOUNT",w:"1fr"},{label:"STATUS",w:"1fr"},{label:"FIT",w:"2.5fr"}]}
+      rows={[
+        ["Claude Corps — Anthropic","$10K grant + free AI fellow","Deadline passed — next cohort TBC","BLKOWNED did not apply for Cohort 1. Monitor Anthropic for January 2027 cohort opening. Still pursue Claude for Nonprofits 75% discount immediately."],
+        ["Black Opportunity Fund","$25K–$100K","OPEN NOW","Funds incubator/accelerator programs for Black entrepreneurs — direct residency fit"],
+        ["Claude for Nonprofits","75% discount","OPEN NOW","Foundational AI infrastructure. Required before any AI-related grant application."],
+        ["OTF Grow Grant","$100K–$600K / 2-3 yrs","Fall 2026","4-year track record + residency model meets 'established program expanding impact' criteria"],
+        ["Canada Summer Jobs","Up to 100% min. wage","Annual","Funds coordinator/junior AI role — reduces Ashleigh's operational burden"],
+        ["BEP Ecosystem Fund (next round)","$125K–$3M","Monitor — coming","THE primary Tier 2 target. Validated application + new model + consortium = stronger bid"],
+        ["CanCode Successor Round","$30M pool","Monitor — coming","$30M committed in AI for All for AI/digital skills. Apply with consortium."],
+        ["AI for All — AI Literacy Initiative","TBD (large)","6–18 months","Consortium-led. BLKOWNED as equity-delivery partner with McMaster/Mohawk/Brock/Guelph."],
+        ["FedDev RAII — Next Intake","$250K–$5M","Monitor — coming","$500M national commitment through AI for All. SME AI adoption with McMaster."],
+        ["SSHRC Partnership Engage","Up to $25K","Aug/Nov 2026","Entry-level research grant via McMaster. Launches the Tier 3 evidence track."],
+        ["Salesforce.org","Varies","Ongoing","Convert existing sponsorship into formal grant. Workforce development + social impact streams."],
+      ]}
+    />
+
+    <SubTitle>The Four Non-Negotiable Grant Rules</SubTitle>
+    <Bullet bold>Never apply for a grant you are not ready to report against. One late report costs the entire funder relationship.</Bullet>
+    <Bullet>Every application references the impact report, the theory of change, and the McMaster letter of support. These three do the credibility work so the program description can do the differentiation work.</Bullet>
+    <Bullet>Maintain a shared grant calendar with application deadlines, reporting deadlines, and renewal windows. Missed windows are forfeited money.</Bullet>
+    <Bullet>The Federation of Black Canadians publishes a monthly grant list. Someone reads it the day it publishes. No exceptions.</Bullet>
+
+    <SubTitle>The Ruffolo Doctrine — How to Think About Grants Strategically</SubTitle>
+    <Card style={{background:"linear-gradient(135deg,#0D0D0D,#1a0D0D)",border:"1px solid #3a2020"}}>
+      <Body>John Ruffolo and Michael Murchison published a direct critique of AI for All on July 14, 2026, that every BLKOWNED grant decision should be filtered through. Three arguments with direct application to our strategy:</Body>
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:10,marginBottom:0}}>
+        {[
+          {t:"Lead with procurement, not grants",d:"Grants create dependency and reward grant-writing. Procurement creates markets and rewards results. Government is the largest buyer — its purchasing power scales organisations faster than any cheque. BLKOWNED's ERG event management contracts and Supplier Pipeline Partnerships are the implementation of this thesis.",color:"#FF6B6B"},
+          {t:"Avoid the alphabet soup",d:"Ottawa is accumulating an impressive number of funding vehicles. More funds are not the same as more outcomes. Each adds its own application process and reporting burden. BLKOWNED's focused grant strategy — BEP, OTF, CanCode, AI for All — is deliberately narrow. Chasing every new envelope that gets announced is a capacity trap.",color:G},
+          {t:"Focus is the competitive advantage",d:"Six pillars and dozens of initiatives signal comprehensiveness, but comprehensiveness shades into a lack of focus. A plan that promises everything risks delivering nothing at scale. BLKOWNED pitches AI for All on two pillars only: AI literacy for under-represented communities and SME AI adoption. That focus is what wins.",color:"#7C9FFF"},
+        ].map((p,i)=><Card key={i} style={{borderTop:`2px solid ${p.color}`,marginBottom:0}}>
+          <div style={{fontSize:12,fontWeight:700,color:p.color,marginBottom:6}}>{p.t}</div>
+          <div style={{fontSize:11,color:"#7070A0",lineHeight:1.5}}>{p.d}</div>
+        </Card>)}
+      </div>
+    </Card>
+
+    <SubTitle>Organisational Readiness — The Pre-Grant Checklist</SubTitle>
+    {[
+      ["CRA Registered Charity Status","Unlocks OTF, Canadian Heritage, most foundation grants","Priority 1 — confirm or start application now"],
+      ["Published Annual Impact Report","Single most-read document by every funder","Build now using Trailblazer cohort data"],
+      ["Board Page with Bios on Website","Funders verify 2/3 Black leadership requirement","One afternoon to write, one hour to post"],
+      ["Reviewed Financial Statements","Required for grants above $50K","Engage CPA this year even without active grant"],
+      ["Theory of Change (1 page)","Spine of every application — prevents re-explaining from scratch","Draft based on SOS research"],
+      ["McMaster Letter of Support","Worth more than 3 paragraphs of program description","Formalise when LOI is signed"],
+      ["Organisational Policies","Accessibility, Anti-Harassment, Conflict of Interest, Privacy, EDI","One board meeting to adopt; Black Builders Network provides templates"],
+    ].map(([item,why,action],i)=><div key={i} style={{display:"grid",gridTemplateColumns:"1.5fr 1.5fr 1.5fr",gap:0,background:i%2===0?"#111":"transparent",borderBottom:"1px solid #1a1a1a",padding:"8px 0"}}>
+      <div style={{fontSize:12,color:"#DDD",fontWeight:600,paddingLeft:4}}>{item}</div>
+      <div style={{fontSize:12,color:M,paddingLeft:4}}>{why}</div>
+      <div style={{fontSize:12,color:G,fontStyle:"italic",paddingLeft:4}}>{action}</div>
+    </div>)}
+  </div>;
+}
+
+function Programs() {
+  const [showFindings, setShowFindings] = React.useState(false);
+  return <div>
+    <SectionTitle>Program Strategy</SectionTitle>
+    <Body>BLKOWNED should not run one program. It should run a four-rung ladder where each rung serves a different level of commitment and readiness, feeds entrepreneurs upward into deeper engagement, and has its own funding profile.</Body>
+
+    <Card style={{background:"linear-gradient(135deg,#0D0D0D,#12122A)",border:"1px solid #2a2a4a"}}>
+      <div style={{fontSize:10,color:"#7C9FFF",fontWeight:700,letterSpacing:2,marginBottom:6}}>THE EVIDENCE BASE</div>
+      <div style={{fontSize:14,fontWeight:700,color:"#EEE",marginBottom:6}}>MEB x BLK OWNED SOS Program — Zhuoma Yongci, McLean Centre for Collaborative Discovery, April 2026</div>
+      <Body>The Trailblazer Residency model is not theoretical. It is grounded in primary research: 11 semi-structured interviews with Black entrepreneurs connected to BLKOWNED, conducted February–April 2026. This is the strongest evidence base of any Black entrepreneurship program in southwestern Ontario — and it is fundable evidence, not anecdote.</Body>
+      <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:8,marginBottom:12}}>
+        {[
+          {val:"11",label:"Entrepreneur interviews"},
+          {val:"8 of 11",label:"Already using AI tools ad hoc"},
+          {val:"#1 gap",label:"Structured mentorship access"},
+          {val:"5 of 11",label:"Named sales/client acquisition as top challenge"},
+        ].map((s,i)=><div key={i} style={{background:"#1a1a2a",borderRadius:8,padding:"10px 10px",textAlign:"center",border:"1px solid #2a2a3a"}}>
+          <div style={{fontSize:16,fontWeight:800,color:"#7C9FFF"}}>{s.val}</div>
+          <div style={{fontSize:10,color:"#555",marginTop:3}}>{s.label}</div>
+        </div>)}
+      </div>
+      <button onClick={()=>setShowFindings(!showFindings)} style={{background:"transparent",border:"1px solid #2a2a4a",color:"#7C9FFF",fontSize:11,padding:"6px 14px",borderRadius:6,cursor:"pointer"}}>
+        {showFindings?"Hide key findings":"Show key findings from 11 interviews"}
+      </button>
+      {showFindings && <div style={{marginTop:12}}>
+        {[
+          ["Mentorship is the primary gap","Access to structured, practical mentorship was the most significant unmet need across all 11 interviews. Entrepreneurs are using Google and ChatGPT to fill a gap that should be served by trusted, experienced mentors."],
+          ["Sales, growth, and operations are the highest priorities","Client acquisition and sales (5 of 11), operations and scaling (5 of 11), and funding access (3 of 11) are the pressing pressures. These directly inform the Residency's mentorship categories."],
+          ["AI tools are already in use — but unstructured","8 of 11 entrepreneurs already use AI tools (primarily ChatGPT) for writing, research, and brainstorming. The Residency adds value by integrating AI intentionally — not introducing it cold."],
+          ["Earlier mentor access would have changed trajectories","Marvel Ekwurib, Newton & Lecoles, Abiola Sulaiman, and Caleb each said directly that earlier mentor access would have changed their path. This validates the residency over the workshop model."],
+        ].map(([t,d],i)=><div key={i} style={{background:"#12121A",borderRadius:8,padding:"10px 12px",marginBottom:6,borderLeft:"2px solid #7C9FFF"}}>
+          <div style={{fontSize:12,fontWeight:700,color:"#CCC",marginBottom:3}}>{t}</div>
+          <div style={{fontSize:11,color:"#666",lineHeight:1.5}}>{d}</div>
+        </div>)}
+        <div style={{fontSize:11,color:"#555",fontStyle:"italic",marginTop:8}}>Source: MEB x BLK OWNED SOS Program Project Report, Zhuoma Yongci, April 30, 2026. Full report available on request.</div>
+      </div>}
+    </Card>
+
+    <SubTitle>The Three-Pillar Architecture — SOS Framework</SubTitle>
+    <Body>The Trailblazer Residency is built on the Three-Pillar SOS Framework developed through the MEB research. The pillars are sequenced deliberately: human mentorship first, AI in service of the program, and a research-based AI assistant only after sufficient real community data exists. This sequencing is both the right program design AND the strongest "responsible AI" story available for AI for All funding.</Body>
+    <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:10,marginBottom:16}}>
+      {[
+        {n:"Pillar 1",t:"AI-Enabled Intake",phase:"Phase 1 — Now",color:"#4CAF50",items:["Automates new entrepreneur intake and assessment","Generates mentor-ready summary of each resident's needs and stage","Reduces admin burden on Ashleigh's team","Enables faster, more consistent onboarding at scale"]},
+        {n:"Pillar 2",t:"Human-Led Mentorship",phase:"Phase 2 — Core Impact",color:"#C9A84C",items:["Discipline-specific mentors: sales, operations, finance, AI tools","Hands-on support paired with active skill transfer","Flexible and frequent — not one-time workshops","Tailored by intake insights from Pillar 1"]},
+        {n:"Pillar 3",t:"Research-Based AI Assistant",phase:"Phase 3 — Long-Term (build after 20–25 interviews)",color:"#7C9FFF",items:["Built only after sufficient real entrepreneur data exists","Analyzes mentorship patterns and recurring challenges","24/7 AI assistant grounded in community evidence","Generates institutional knowledge for future cohorts"]},
+      ].map((p,i)=><div key={i} style={{background:"#141414",border:`1px solid #222`,borderTop:`3px solid ${p.color}`,borderRadius:12,padding:16}}>
+        <div style={{fontSize:10,color:p.color,letterSpacing:1,fontWeight:700,marginBottom:2}}>{p.n}</div>
+        <div style={{fontSize:14,fontWeight:700,color:"#EEE",marginBottom:2}}>{p.t}</div>
+        <div style={{fontSize:10,color:"#555",marginBottom:10,fontStyle:"italic"}}>{p.phase}</div>
+        {p.items.map((it,j)=><Bullet key={j}>{it}</Bullet>)}
+      </div>)}
+    </div>
+    <Card style={{borderLeft:"2px solid #7C9FFF",background:"#111"}}>
+      <div style={{fontSize:11,fontWeight:700,color:"#7C9FFF",marginBottom:4}}>DATA NOTE — PILLAR 3</div>
+      <div style={{fontSize:12,color:"#666",lineHeight:1.5}}>The SOS report is clear: Pillar 3 should not be built until the interview sample reaches 20–25 entrepreneurs, ensuring balanced representation across all business stages. The current 11-interview dataset (5 early-stage, 6 growth/scaling) is the foundation — continued data collection is essential before AI assistant development begins. This responsible sequencing is a grant differentiator, not a weakness.</div>
+    </Card>
+
+    <SubTitle>The Narrative Adjustment for AI for All Funding</SubTitle>
+    <Card style={{background:"linear-gradient(135deg,#0D0D0D,#1a1a0D)",border:"1px solid #3a3a20"}}>
+      <Body>The SOS framework deliberately de-centres AI — the right call for designing a good mentorship program. For AI for All funding, the narrative re-balances: AI literacy and responsible adoption move to the front, with the human-centred design repositioned as our trust differentiator rather than the headline. Same program, re-weighted story. This is not spin — it is the difference between a program that describes itself accurately to funders versus one that undersells its AI integration.</Body>
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
+        <div style={{background:"#1a1a0D",borderRadius:8,padding:12,border:"1px solid #2a2a14"}}>
+          <div style={{fontSize:11,fontWeight:700,color:"#888",marginBottom:6}}>SOS REPORT FRAMING</div>
+          <div style={{fontSize:12,color:"#666"}}>"Moving away from AI as the central solution and repositioning it as one part of a broader, human-centred support system."</div>
+        </div>
+        <div style={{background:"#0D1a0D",borderRadius:8,padding:12,border:"1px solid #143014"}}>
+          <div style={{fontSize:11,fontWeight:700,color:"#4CAF50",marginBottom:6}}>AI FOR ALL FUNDING FRAMING</div>
+          <div style={{fontSize:12,color:"#777"}}>"A responsible AI literacy program with human-centred design as the trust architecture — proven by 11 community interviews. Demos sell. Audits ship."</div>
+        </div>
+      </div>
+    </Card>
+
+    <SubTitle>The McMaster MEB Curriculum — Our Pedagogical Backbone</SubTitle>
+    <Card style={{background:"linear-gradient(135deg,#0D0D0D,#0D1020)",border:"1px solid #2a2a4a",marginBottom:16}}>
+      <div style={{fontSize:10,color:"#7C9FFF",fontWeight:700,letterSpacing:2,marginBottom:6}}>DEVELOPED BY TEJ SANDHU, EIR — McMASTeR DeGROOTE SCHOOL OF BUSINESS</div>
+      <Body>Tej's AI-Powered Entrepreneurship program for McMaster's Marinucci Entrepreneurial Bridge (MEB) is the pedagogical backbone of the Trailblazer Residency. The operating model is exact: teach briefly, build immediately, assign fieldwork, review with mentors, gate progression. The three MEB stages map directly onto the Trailblazer Residency's Three-Pillar SOS framework.</Body>
+      <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:10,marginBottom:12}}>
+        {[
+          {stage:"Stage 1.0",title:"AI Literacy for Entrepreneurs",blk:"SOS Pillar 1 (AI-Enabled Intake)",color:"#4CAF50",tools:"Elements of AI (pre-work) + Claude for Nonprofits or Microsoft Copilot for build-along lab",gate:"One AI-enabled founder output. Personal AI use plan.",weeks:"Weeks 1-2"},
+          {stage:"Stage 2.0",title:"AI Founder Co-Pilot",blk:"SOS Pillar 2 (Human-Led Mentorship)",color:"#C9A84C",tools:"NotebookLM for interview synthesis + Claude for thesis structuring + Google Docs for evidence log",gate:"Venture-readiness package: synthesis, pitch, application asset, 30-day plan.",weeks:"Weeks 3-6"},
+          {stage:"Stage 3.0",title:"AI Venture Operating System",blk:"SOS Pillar 3 (evolved: from research assistant to personal founder OS)",color:"#7C9FFF",tools:"Microsoft Power Automate + Claude + Google Workspace for workflow outputs",gate:"Working workflow demo. 7-day use test. Ecosystem routing.",weeks:"Weeks 7-8"},
+        ].map((s,i)=><div key={i} style={{background:"#141414",borderTop:`3px solid ${s.color}`,borderRadius:10,padding:14,border:"1px solid #222"}}>
+          <div style={{fontSize:10,color:s.color,fontWeight:700,marginBottom:4}}>{s.stage} · {s.weeks}</div>
+          <div style={{fontSize:13,fontWeight:700,color:"#EEE",marginBottom:4}}>{s.title}</div>
+          <div style={{fontSize:11,color:"#555",marginBottom:8,fontStyle:"italic"}}>{s.blk}</div>
+          <div style={{fontSize:11,color:"#7070A0",lineHeight:1.5,marginBottom:6}}><strong style={{color:"#AAA"}}>Tools:</strong> {s.tools}</div>
+          <div style={{fontSize:11,color:s.color,lineHeight:1.5}}><strong>Gate:</strong> {s.gate}</div>
+        </div>)}
+      </div>
+      <div style={{background:"rgba(124,159,255,0.08)",borderRadius:8,padding:12,border:"1px solid rgba(124,159,255,0.2)"}}>
+        <div style={{fontSize:11,fontWeight:700,color:"#7C9FFF",marginBottom:4}}>KEY BLKOWNED ADAPTATION</div>
+        <div style={{fontSize:12,color:"#888",lineHeight:1.6}}>The MEB curriculum is designed for people with ideas. BLKOWNED graduates have running businesses. Stage 2.0 therefore reframes from "validate your startup" to "sharpen your growth strategy and find your best customers." The fieldwork conversations are with existing clients and target clients, not hypothetical users. The gate into Stage 2.0 is also lighter for existing Trailblazer graduates who already have ventures.</div>
+      </div>
+    </Card>
+
+    <SubTitle>The Credential Stack — What Every Graduate Earns</SubTitle>
+    <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:8,marginBottom:16}}>
+      {[
+        {n:"1",t:"Elements of AI Certificate",by:"University of Helsinki + MinnaLearn",cost:"Free",color:"#4CAF50"},
+        {n:"2",t:"Wharton AI for Business",by:"University of Pennsylvania via Coursera",cost:"Free to audit / McMaster license TBC",color:"#C9A84C"},
+        {n:"3",t:"Microsoft Applied Skills",by:"Microsoft (via McMaster relationship)",cost:"Free via McMaster",color:"#7C9FFF"},
+        {n:"4",t:"Trailblazer Residency Certificate",by:"BLKOWNED x McMaster DeGroote",cost:"Issued by BLKOWNED",color:"#FF9F43"},
+      ].map((c,i)=><div key={i} style={{background:"#141414",borderRadius:10,padding:14,border:"1px solid #222",borderLeft:`3px solid ${c.color}`}}>
+        <div style={{fontSize:22,fontWeight:900,color:c.color,marginBottom:4}}>{c.n}</div>
+        <div style={{fontSize:12,fontWeight:700,color:"#EEE",marginBottom:4}}>{c.t}</div>
+        <div style={{fontSize:11,color:"#555",marginBottom:4}}>{c.by}</div>
+        <div style={{fontSize:11,color:c.color,fontWeight:700}}>{c.cost}</div>
+      </div>)}
+    </div>
+
+    <SubTitle>Starting Now — The Pioneer Cohort (July 22, 2026)</SubTitle>
+    <Card style={{borderLeft:"3px solid #FF6B6B"}}>
+      <Body>The Trailblazer Residency is not a future plan. It starts today with the 8 Trailblazer 2026 graduates from the Garden Party plus the 3 board members as participant-facilitators. No Community Platform 2.0 required. Running entirely on Google Workspace, Disco, WhatsApp, Elements of AI, and Claude for Nonprofits. 8-week program: Stage 1.0 AI Fluency complete by mid-August. Full program complete by end of September. Nicholas Noel approached in October with documented proof of delivery.</Body>
+      <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:8,marginTop:10}}>
+        {[
+          {n:"11",l:"Pioneer cohort participants"},
+          {n:"8 weeks",l:"Stage 1.0 to Demo Day"},
+          {n:"4",l:"Verifiable credentials earned"},
+          {n:"Oct 2026",l:"Nicholas Noel approach ready"},
+        ].map((s,i)=><div key={i} style={{background:"#0D0D0D",borderRadius:8,padding:"10px 12px",textAlign:"center",border:"1px solid #1e1e1e"}}>
+          <div style={{fontSize:18,fontWeight:800,color:"#FF6B6B"}}>{s.n}</div>
+          <div style={{fontSize:10,color:"#555",marginTop:3}}>{s.l}</div>
+        </div>)}
+      </div>
+    </Card>
+
+    <SubTitle>The Four-Rung Program Ladder</SubTitle>
+    <Body>The SOS framework is Pillar 2 and Pillar 3 of the Trailblazer Residency (Rung 3 below). The full program ladder gives every entrepreneur an entry point, and funders a complete theory of change.</Body>
+    <div style={{position:"relative",marginBottom:20}}>
+      {[
+        {r:1,n:"Community Markets",audience:"Broad awareness and network",desc:"Entry point. 9,000+ supporter network. Brand building. Pipeline for Rung 2. Keep free — fund via corporate sponsorship.",fund:"Sponsorships, ticket revenue",color:"#555"},
+        {r:2,n:"AI Literacy Workshops",audience:"Entrepreneurs ready to learn",desc:"Monthly or quarterly workshops on AI tools for small business. Open to the full community. Qualifies as digital-skills delivery for CanCode. Feeds Rung 3.",fund:"CanCode, AI for All, FedDev RAII",color:"#888"},
+        {r:3,n:"Trailblazer Residency",audience:"Selected founders, all industries",desc:"12-month intensive anchored by the SOS Three-Pillar Framework. AI-enabled intake, human-led mentorship, research-based AI assistant. 8–12 residents. Documented business outcomes at graduation.",fund:"BEP, OTF Grow, BOF, AI for All",color:"#C9A84C"},
+        {r:4,n:"Alumni Circle",audience:"Residency graduates",desc:"Post-residency sustaining community. Graduates become mentors for future residents. Contributes to Pillar 3 data set. Self-funding through membership.",fund:"Membership fees, Salesforce.org",color:"#4CAF50"},
+      ].map((rung,i)=><div key={i} style={{display:"flex",gap:14,marginBottom:8,alignItems:"flex-start"}}>
+        <div style={{minWidth:40,height:40,borderRadius:"50%",background:rung.color,display:"flex",alignItems:"center",justifyContent:"center",fontSize:16,fontWeight:900,color:"#0D0D0D",marginTop:2}}>{rung.r}</div>
+        <div style={{flex:1,background:"#141414",borderRadius:10,padding:14,border:"1px solid #222"}}>
+          <div style={{display:"flex",gap:8,alignItems:"center",marginBottom:6,flexWrap:"wrap"}}>
+            <span style={{fontSize:14,fontWeight:700,color:"#EEE"}}>{rung.n}</span>
+            <Tag color={rung.color} bg={rung.color+"20"}>{rung.audience}</Tag>
+          </div>
+          <div style={{fontSize:12,color:"#7070A0",lineHeight:1.5,marginBottom:6}}>{rung.desc}</div>
+          <div style={{fontSize:11,color:"#555",fontStyle:"italic"}}>Primary funding: {rung.fund}</div>
+        </div>
+      </div>)}
+    </div>
+
+    <SubTitle>Trailblazer Residency — Four Design Principles</SubTitle>
+    <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:16}}>
+      {[
+        {t:"Depth over volume",d:"8–12 residents per cohort, not 40 in a workshop. Selectivity raises perceived value and produces documented outcomes that fund the next cohort."},
+        {t:"AI is infrastructure, not curriculum",d:"The residency does not teach AI. It integrates AI tools into each resident's actual business. They graduate with an AI-enabled business, not an AI literacy certificate."},
+        {t:"Outcomes measured, not attendance tracked",d:"Grant metrics are revenue at entry vs. graduation, clients acquired, AI tools adopted, business still operating 12 months later. Build measurement in from day one."},
+        {t:"Alumni as mentors",d:"Every graduating cohort mentors the next one. Reduces recruitment costs. Deepens the community flywheel. Contributes to the Pillar 3 dataset. Structure this deliberately."},
+      ].map((p,i)=><Card key={i} style={{borderLeft:"2px solid #C9A84C"}}>
+        <div style={{fontSize:13,fontWeight:700,color:"#EEE",marginBottom:4}}>{p.t}</div>
+        <div style={{fontSize:12,color:"#7070A0",lineHeight:1.5}}>{p.d}</div>
+      </Card>)}
+    </div>
+
+    <Card style={{background:"#1B2B4B",border:"1px solid #C9A84C30"}}>
+      <SubTitle children="Why Hair, Crafts, and Service Businesses Are 100% In Scope"/>
+      <Body>The Trailblazer Residency is not an AI program for tech companies. It is a business-building program that uses AI as a tool for every kind of business. The SOS interviews confirm this: the entrepreneurs who need this most are in hair care, wellness, consulting, education, and creative services — not software. For a hair product founder, AI integration means: writing product descriptions and email campaigns in minutes; building inventory and pricing systems; understanding who buys and what brings them back; drafting funding applications. The things that stay human: formulation, cultural knowledge, customer relationships. AI handles the administrative and commercial layer that consumes time. Federal evaluators have seen enough AI programs for tech startups. They have not seen this program, for this community. Lead with that.</Body>
+    </Card>
+  </div>;
+}
+
+
+function EarnedRevenue() {
+  const [erg, setErg] = useState(4);
+  const [ergTier, setErgTier] = useState(1);
+  const ergPrices = [3500, 7500, 15000];
+  const ergLabels = ["Bronze ($3,500)","Silver ($7,500)","Gold ($15,000)"];
+  const ergRevenue = erg * ergPrices[ergTier];
+
+  const [bizCount, setBizCount] = useState(175);
+  const [convRate, setConvRate] = useState(20);
+  const [avgPrice, setAvgPrice] = useState(199);
+  const dirRevenue = Math.round(bizCount * (convRate/100) * avgPrice);
+
+  return <div>
+    <SectionTitle>Earned Revenue Playbook</SectionTitle>
+    <Body>Grants fund program delivery at scale. Earned revenue funds BLKOWNED's operational existence. The right model: earned revenue covers operating costs so that grant applications come from a position of organisational stability, not survival. A funder who sees B2B revenue, a GIC, and clean financials is far more confident making a multi-year commitment.</Body>
+
+    <SubTitle>Stream 1 — ERG Event Management</SubTitle>
+    <Body>Corporate Employee Resource Groups need authentic, high-quality event programming. BLKOWNED — with its community network, Black entrepreneur speaker pipeline, and event production experience — is uniquely positioned to serve this market. BOLDforce Canada is the first and warmest target. Chris is Co-Founder, which makes this a phone call, not a cold pitch.</Body>
+
+    <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:10,marginBottom:16}}>
+      {[
+        {tier:"Bronze",price:"$3,500",includes:"Event concept, day-of coordination, post-event impact report. 4–6 hour event.",badge:"ENTRY"},
+        {tier:"Silver",price:"$7,500",includes:"Full event management, speaker curation from BLKOWNED network, branded materials, impact metrics package.",badge:"RECOMMENDED"},
+        {tier:"Gold",price:"$15,000",includes:"Annual partnership. 4 quarterly activations, exclusive naming rights, custom programming, sponsorship recognition in all BLKOWNED channels.",badge:"PREMIUM"},
+      ].map((t,i)=><div key={i} style={{background:i===1?N:"#141414",border:`1px solid ${i===1?G:"#222"}`,borderRadius:12,padding:16}}>
+        <Tag color={i===1?"#0D0D0D":G} bg={i===1?G:G+"20"}>{t.badge}</Tag>
+        <div style={{fontSize:20,fontWeight:900,color:G,margin:"10px 0 2px"}}>{t.tier}</div>
+        <div style={{fontSize:22,fontWeight:800,color:"#EEE",marginBottom:10}}>{t.price}</div>
+        <div style={{fontSize:12,color:i===1?"#B0C0D0":M,lineHeight:1.5}}>{t.includes}</div>
+      </div>)}
+    </div>
+
+    <Card>
+      <div style={{fontSize:12,color:G,fontWeight:700,marginBottom:12,letterSpacing:1}}>ERG REVENUE CALCULATOR</div>
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:16,marginBottom:16}}>
+        <div>
+          <label style={{fontSize:11,color:"#888",display:"block",marginBottom:6}}>Events per year — <strong style={{color:"#FFF"}}>{erg}</strong></label>
+          <input type="range" min="1" max="12" value={erg} onChange={e=>setErg(+e.target.value)}/>
+          <div style={{display:"flex",justifyContent:"space-between",fontSize:10,color:"#444",marginTop:2}}><span>1</span><span>12</span></div>
+        </div>
+        <div>
+          <label style={{fontSize:11,color:"#888",display:"block",marginBottom:6}}>Package tier — <strong style={{color:"#FFF"}}>{ergLabels[ergTier]}</strong></label>
+          <input type="range" min="0" max="2" value={ergTier} onChange={e=>setErgTier(+e.target.value)}/>
+          <div style={{display:"flex",justifyContent:"space-between",fontSize:10,color:"#444",marginTop:2}}><span>Bronze</span><span>Gold</span></div>
+        </div>
+      </div>
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
+        <div style={{background:"#0D0D0D",borderRadius:10,padding:"14px 12px",textAlign:"center",border:"1px solid #1e1e1e"}}>
+          <div style={{fontSize:24,fontWeight:800,color:"#4CAF50"}}>{"$"+ergRevenue.toLocaleString()}</div>
+          <div style={{fontSize:11,color:"#555",marginTop:4}}>Annual ERG Revenue</div>
+        </div>
+        <div style={{background:"#0D0D0D",borderRadius:10,padding:"14px 12px",border:"1px solid #1e1e1e"}}>
+          <div style={{fontSize:12,color:M,marginBottom:6}}>Target clients</div>
+          {["BOLDforce Canada (warm — Chris is Co-Founder)","Salesforce ERGs (existing sponsor relationship)","RBC Black Employee Network","TD, CIBC, BMO ERG programs","Deloitte, PWC, KPMG DEI offices"].map((c,i)=><div key={i} style={{fontSize:11,color:"#777",marginBottom:2}}>▸ {c}</div>)}
+        </div>
+      </div>
+    </Card>
+
+    <SubTitle>Stream 2 — Directory Monetisation</SubTitle>
+    <Body>175+ businesses are already listed. The base directory stays free forever — community trust is the moat. Premium tiers capture revenue from businesses that see commercial value in elevated placement and visibility.</Body>
+
+    <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:10,marginBottom:14}}>
+      {[
+        {tier:"Featured",price:"$99/yr",includes:"Top placement, 'Featured' badge, highlighted listing"},
+        {tier:"Business Pro",price:"$199/yr",includes:"All above + analytics dashboard, monthly social spotlight, newsletter feature"},
+        {tier:"Partner",price:"$499/yr",includes:"All above + market sponsorship, quarterly video spotlight, homepage feature"},
+      ].map((t,i)=><Card key={i}>
+        <div style={{fontSize:13,fontWeight:700,color:"#EEE",marginBottom:2}}>{t.tier}</div>
+        <div style={{fontSize:18,fontWeight:800,color:G,marginBottom:8}}>{t.price}</div>
+        <div style={{fontSize:11,color:M,lineHeight:1.5}}>{t.includes}</div>
+      </Card>)}
+    </div>
+
+    <Card>
+      <div style={{fontSize:12,color:G,fontWeight:700,marginBottom:12,letterSpacing:1}}>DIRECTORY REVENUE CALCULATOR</div>
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:16,marginBottom:14}}>
+        <div>
+          <label style={{fontSize:11,color:"#888",display:"block",marginBottom:6}}>Businesses in directory — <strong style={{color:"#FFF"}}>{bizCount}</strong></label>
+          <input type="range" min="100" max="500" value={bizCount} onChange={e=>setBizCount(+e.target.value)}/>
+        </div>
+        <div>
+          <label style={{fontSize:11,color:"#888",display:"block",marginBottom:6}}>Conversion rate — <strong style={{color:"#FFF"}}>{convRate}%</strong></label>
+          <input type="range" min="5" max="50" value={convRate} onChange={e=>setConvRate(+e.target.value)}/>
+        </div>
+        <div>
+          <label style={{fontSize:11,color:"#888",display:"block",marginBottom:6}}>Avg. premium price — <strong style={{color:"#FFF"}}>${avgPrice}</strong></label>
+          <input type="range" min="99" max="499" value={avgPrice} onChange={e=>setAvgPrice(+e.target.value)}/>
+        </div>
+      </div>
+      <div style={{textAlign:"center",background:"#0D0D0D",borderRadius:10,padding:14,border:"1px solid #1e1e1e"}}>
+        <div style={{fontSize:28,fontWeight:800,color:G}}>{"$"+dirRevenue.toLocaleString()}</div>
+        <div style={{fontSize:11,color:"#555",marginTop:4}}>Annual Directory Premium Revenue</div>
+      </div>
+    </Card>
+
+    <SubTitle>Stream 3 — The Supply Chain Pitch</SubTitle>
+    <Card style={{background:N,border:`1px solid ${G}40`}}>
+      <Body>This is the most powerful earned revenue argument — and the one that changes the nature of corporate sponsorship entirely. Salesforce sales training + Shopify e-commerce training + AI tool integration = Black-owned businesses that are ready for corporate supplier diversity programs.</Body>
+      <Body>Large corporations have supplier diversity targets (typically 10–15% of procurement from diverse suppliers). Most cannot find enough qualified diverse vendors. BLKOWNED is building that pipeline. That reframes every corporate sponsorship conversation from charity to business case.</Body>
+
+      <SubTitle children="The Supplier Pipeline Pitch"/>
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
+        {[
+          {who:"To Salesforce",pitch:"We are building your diverse supplier pipeline. Trailblazer graduates are Salesforce-trained, Shopify-enabled, and AI-literate — exactly the standard your supplier diversity team needs."},
+          {who:"To RBC",pitch:"We are building your future SME banking clients and diverse vendor base. Every resident we graduate is a creditworthy, AI-enabled small business with documented revenue growth."},
+          {who:"To Shopify",pitch:"We are your community adoption engine for Black-owned SMEs in southwestern Ontario. Our graduates go live on Shopify with real sales, not just storefronts."},
+          {who:"To Any Large Corp",pitch:"Sponsor a cohort at $25K–$50K. By year-end, 8–12 Black-owned businesses are ready to enter your supplier diversity program. Measurable DEI impact with a business return."},
+        ].map((p,i)=><Card key={i}>
+          <div style={{fontSize:12,fontWeight:700,color:G,marginBottom:6}}>{p.who}</div>
+          <div style={{fontSize:12,color:"#B0B0C8",lineHeight:1.5}}>{p.pitch}</div>
+        </Card>)}
+      </div>
+
+      <div style={{marginTop:10,padding:12,background:"rgba(201,168,76,0.1)",borderRadius:8,border:`1px solid ${G}30`}}>
+        <div style={{fontSize:12,fontWeight:700,color:G,marginBottom:4}}>Supplier Pipeline Partnership — Pricing</div>
+        <div style={{fontSize:12,color:"#B0B0C8"}}>$25,000–$50,000/year. Funds 2–3 Trailblazer residents dedicated to corporate supplier readiness. Corporate partner receives: named cohort sponsor, supplier diversity pipeline report, first right of introduction to graduates.</div>
+      </div>
+    </Card>
+
+    <SubTitle>Combined Earned Revenue Potential</SubTitle>
+    <Row items={[
+      {val:"$75K–$180K",label:"ERG Events (5–12/yr)",color:"#4CAF50"},
+      {val:"$7K–$25K",label:"Directory Premium",color:G},
+      {val:"$50K–$100K",label:"Supplier Pipeline Partners",color:"#7C9FFF"},
+      {val:"$132K–$305K",label:"Total Earned Revenue",color:"#FF6B6B"},
+    ]}/>
+  </div>;
+}
+
+function Platform() {
+  const [mem, setMem] = useState(280);
+  const [price, setPrice] = useState(62);
+  const rev = mem * price;
+  const disco = 1800;
+  const net = rev - disco;
+
+  return <div>
+    <SectionTitle>Community Platform 2.0</SectionTitle>
+    <Body>A team of 6 McMaster MBA graduate students is currently working on a project to upgrade BLKOWNED's community platform from Disco to a significantly more capable and valuable experience — with a target launch of January 2027. The goal: deliver enough value that the existing 280 members, and new members, are willing to pay a subscription fee.</Body>
+
+    <Row items={[
+      {val:"280",label:"Current Members",color:G},
+      {val:"$1,800",label:"Disco Cost / Year",color:"#FF6B6B"},
+      {val:"Jan 2027",label:"Launch Target",color:G},
+      {val:"6",label:"MBA Students Building It",color:"#7C9FFF"},
+    ]}/>
+
+    <SubTitle>Revenue Calculator — Subscription Model</SubTitle>
+    <Card>
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:16,marginBottom:16}}>
+        <div>
+          <label style={{fontSize:11,color:"#888",display:"block",marginBottom:6}}>Paying Members — <strong style={{color:"#FFF"}}>{mem}</strong></label>
+          <input type="range" min="50" max="600" value={mem} onChange={e=>setMem(+e.target.value)}/>
+          <div style={{display:"flex",justifyContent:"space-between",fontSize:10,color:"#444",marginTop:2}}><span>50</span><span>600</span></div>
+        </div>
+        <div>
+          <label style={{fontSize:11,color:"#888",display:"block",marginBottom:6}}>Annual Price — <strong style={{color:"#FFF"}}>${price}/member</strong></label>
+          <input type="range" min="25" max="100" value={price} onChange={e=>setPrice(+e.target.value)}/>
+          <div style={{display:"flex",justifyContent:"space-between",fontSize:10,color:"#444",marginTop:2}}><span>$25</span><span>$100</span></div>
+        </div>
+      </div>
+      <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:10}}>
+        {[
+          {label:"Annual Revenue",val:"$"+rev.toLocaleString(),c:"#4CAF50"},
+          {label:"Disco Cost Replaced",val:"-$"+disco.toLocaleString(),c:"#FF6B6B"},
+          {label:"Net Gain",val:"$"+net.toLocaleString(),c:net>0?G:"#FF6B6B"},
+        ].map((s,i)=><div key={i} style={{background:"#0D0D0D",borderRadius:10,padding:"14px 12px",textAlign:"center",border:"1px solid #1e1e1e"}}>
+          <div style={{fontSize:22,fontWeight:800,color:s.c}}>{s.val}</div>
+          <div style={{fontSize:11,color:"#555",marginTop:4}}>{s.label}</div>
+        </div>)}
+      </div>
+    </Card>
+
+    <SubTitle>MBA Team Project Scope</SubTitle>
+    <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:16}}>
+      {[
+        {ph:"Phase 1",t:"Workspace Architecture",items:["Design Slack channel structure","Map Disco → Slack member migration","Define roles and permissions"]},
+        {ph:"Phase 2",t:"Workflow Automation",items:["New member onboarding flow","Mentor assignment automation","Event and cohort management"]},
+        {ph:"Phase 3",t:"AI Integration",items:["Configure Claude Tag or Cohere","Build knowledge base for AI context","Test member-facing AI experience"]},
+        {ph:"Phase 4",t:"Subscription & Launch",items:["Design membership tiers","Payment integration setup","January 2027 launch"]},
+      ].map((p,i)=><Card key={i}>
+        <div style={{fontSize:10,color:"#555",letterSpacing:1,marginBottom:3}}>{p.ph}</div>
+        <div style={{fontSize:13,fontWeight:700,color:"#DDD",marginBottom:8}}>{p.t}</div>
+        {p.items.map((it,j)=><div key={j} style={{display:"flex",gap:6,marginBottom:5}}>
+          <span style={{color:G,fontSize:10,marginTop:2}}>▸</span>
+          <span style={{fontSize:11,color:"#777"}}>{it}</span>
+        </div>)}
+      </Card>)}
+    </div>
+
+    <SubTitle>The Buy vs. Build Question — Critical for the Board</SubTitle>
+    <Card style={{background:"linear-gradient(135deg,#1a0a0a,#260e0e)",border:"1px solid #FF6B6B",marginBottom:16}}>
+      <div style={{fontSize:12,fontWeight:800,color:"#FF6B6B",letterSpacing:1,marginBottom:8}}>UNRESOLVED ARCHITECTURAL RISK</div>
+      <Body>The MBA team's current plan builds a fully custom platform that BLKOWNED owns outright. This is ambitious and the features are well-designed. But it carries a critical operational risk the board must understand before committing to this path: BLKOWNED currently has no budget to hire a technical resource, no developer on staff, and no grants in place that cover ongoing technical maintenance. The MBA students will not be staying on after January 2027 to maintain what they build.</Body>
+      <Body>A platform BLKOWNED owns but cannot maintain is a liability, not an asset. "A small, non-technical team can look after it" — as the MBA document states — assumes a team exists. Today, it does not.</Body>
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:12}}>
+        <div style={{background:"#1a1a1a",borderRadius:10,padding:14,border:"1px solid #2a2a2a"}}>
+          <div style={{fontSize:12,fontWeight:700,color:"#FF6B6B",marginBottom:8}}>BUILD (Custom Platform)</div>
+          {["BLKOWNED owns the data and platform","Business Growth Score and Funder Dashboard as described","Higher feature ceiling long-term","Requires a developer to maintain after handoff","No budget for that developer today","Custom codebase = ongoing technical debt","Server management, app updates, security patches all fall on the team","Grant funding for ongoing technical maintenance is rare"].map((it,i)=><div key={i} style={{display:"flex",gap:6,marginBottom:4,alignItems:"flex-start"}}>
+            <span style={{color:i<3?"#4CAF50":"#FF6B6B",fontSize:10,marginTop:2}}>▸</span>
+            <span style={{fontSize:11,color:"#888"}}>{it}</span>
+          </div>)}
+        </div>
+        <div style={{background:"#0D1a0D",borderRadius:10,padding:14,border:"1px solid #1a3a1a"}}>
+          <div style={{fontSize:12,fontWeight:700,color:"#4CAF50",marginBottom:8}}>BUY (Slack + Claude for Nonprofits)</div>
+          {["Maintenance included in subscription","Slack handles uptime, security, mobile, updates","Claude for Nonprofits at 75% off with nonprofit license","No developer required after setup","Eligible for CanCode, AI for All, and FedDev grants","Data lives in Canadian AWS regions (Slack Canada)","MBA team builds workflows, not infrastructure","AI integration via Claude Tag is native, not custom"].map((it,i)=><div key={i} style={{display:"flex",gap:6,marginBottom:4,alignItems:"flex-start"}}>
+            <span style={{color:"#4CAF50",fontSize:10,marginTop:2}}>▸</span>
+            <span style={{fontSize:11,color:"#888"}}>{it}</span>
+          </div>)}
+        </div>
+      </div>
+      <div style={{padding:12,background:"rgba(255,107,107,0.08)",borderRadius:8,border:"1px solid rgba(255,107,107,0.2)"}}>
+        <div style={{fontSize:12,color:"#FF9F9F",lineHeight:1.6}}>The board needs to make this decision before the MBA team goes further into development. The question is not which platform has better features — it is which platform BLKOWNED can actually sustain. Chris will bring a formal recommendation to the board with this framing before the next session.</div>
+      </div>
+    </Card>
+
+    <SubTitle>What Members Pay For — The Paid Subscription Breakdown</SubTitle>
+    <Card style={{background:"#141414",border:"1px solid #222",marginBottom:16}}>
+      <Body>One rule guides the pricing model: everything that is free today stays free. Only new value is paid. The paid Growth tier is designed so that every feature is genuinely worth more than the membership fee to a Black entrepreneur trying to build a real business.</Body>
+    </Card>
+    <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12,marginBottom:16}}>
+      <div style={{background:"#141414",border:"1px solid #222",borderRadius:12,padding:18}}>
+        <div style={{fontSize:12,fontWeight:700,color:"#555",letterSpacing:1,marginBottom:4}}>FREE — COMMUNITY TIER</div>
+        <div style={{fontSize:16,fontWeight:800,color:"#666",marginBottom:12}}>Always free</div>
+        {["Basic directory listing","Community events calendar","BLKOWNED market access and notifications","General newsletter","Introduction AI lesson access (Elements of AI is free anyway)","Basic community profile"].map((it,i)=><div key={i} style={{display:"flex",gap:6,marginBottom:5,alignItems:"flex-start"}}>
+          <span style={{color:"#444",fontSize:11,marginTop:2}}>▸</span>
+          <span style={{fontSize:12,color:"#666"}}>{it}</span>
+        </div>)}
+      </div>
+      <div style={{background:"#1B2B4B",border:"1px solid #C9A84C",borderRadius:12,padding:18}}>
+        <div style={{fontSize:12,fontWeight:700,color:"#C9A84C",letterSpacing:1,marginBottom:4}}>PAID — GROWTH TIER</div>
+        <div style={{fontSize:16,fontWeight:800,color:"#EEE",marginBottom:4}}>$50–75 per year</div>
+        <div style={{fontSize:11,color:"#7A8FAA",marginBottom:12,fontStyle:"italic"}}>New value only — nothing taken away</div>
+        {[
+          "Business Growth Score — full 5-pillar assessment with personalised results",
+          "Growth dashboard and monthly KPI tracker",
+          "AI assistant access powered by Claude for Nonprofits",
+          "Finance toolkit: cash flow tracker, pricing and break-even calculators, grant-readiness checklist",
+          "Full Trailblazer Residency curriculum access — Stages 1.0, 2.0, and 3.0",
+          "Priority bootcamp registration and recorded session library",
+          "Mentor matching based on Growth Score weaknesses",
+          "Premium community forum and industry peer groups",
+          "Grant readiness toolkit: templates, checklists, sample applications",
+          "Supplier diversity readiness resources and templates",
+          "Monthly member spotlight and Instagram feature opportunity",
+          "ERG event priority access and advance registration",
+        ].map((it,i)=><div key={i} style={{display:"flex",gap:6,marginBottom:5,alignItems:"flex-start"}}>
+          <span style={{color:"#C9A84C",fontSize:11,marginTop:2}}>▸</span>
+          <span style={{fontSize:12,color:"#B0C0D8"}}>{it}</span>
+        </div>)}
+      </div>
+    </div>
+
+    <SubTitle>Credentials Included in the Paid Tier</SubTitle>
+    <Body>These credentials are either free or low-cost and can be guided through the platform as part of the paid experience. They represent the single most compelling value argument for the subscription — a member paying $60 a year walks away with employer-recognised AI credentials from world-class institutions.</Body>
+    <div style={{display:"grid",gridTemplateColumns:"repeat(2,1fr)",gap:10,marginBottom:12}}>
+      {[
+        {t:"Elements of AI Certificate",by:"University of Helsinki + MinnaLearn",cost:"Free",detail:"Internationally recognised AI literacy certificate. Self-paced. Included as pre-work in the Trailblazer Residency. Members guided through completion as part of their subscription.",available:true},
+        {t:"IBM SkillsBuild AI Badges",by:"IBM",cost:"Free",detail:"IBM digital badges covering AI fundamentals, prompt engineering, and applied AI for business. Stackable credentials, no cost, employer-recognised.",available:true},
+        {t:"Microsoft Applied Skills",by:"Microsoft",cost:"Free via Microsoft Learn",detail:"Credentials in AI workflow automation and business process improvement. Directly relevant to Stage 3.0 of the Trailblazer Residency. Free through Microsoft Learn.",available:true},
+        {t:"Salesforce Trailhead AI Badges",by:"Salesforce",cost:"Free",detail:"Salesforce's AI and platform credentials. Given BLKOWNED's existing Salesforce sponsorship relationship, these could be formally integrated as a partner benefit.",available:true},
+        {t:"Wharton AI for Business Certificate",by:"University of Pennsylvania — Wharton School",cost:"Requires partnership or Coursera fee",detail:"The most prestigious credential available — a shareable digital certificate from one of the world's top 3 business schools, showing completion of Wharton-designed AI strategy curriculum. Getting the certificate requires Coursera payment. A future McMaster partnership could potentially negotiate subsidised access for Trailblazer Residents. This is an aspirational benefit pending formal agreement.",available:false},
+      ].map((c,i)=><div key={i} style={{background:c.available?"#141414":"#1a0D0D",border:`1px solid ${c.available?"#222":"#3a1a1a"}`,borderRadius:10,padding:14,borderLeft:`3px solid ${c.available?"#4CAF50":"#FF9F43"}`}}>
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:6,flexWrap:"wrap",gap:6}}>
+          <div style={{fontSize:13,fontWeight:700,color:"#EEE"}}>{c.t}</div>
+          <span style={{fontSize:10,fontWeight:700,padding:"2px 8px",borderRadius:20,background:c.available?"rgba(76,207,100,0.12)":"rgba(255,159,67,0.12)",color:c.available?"#4CAF50":"#FF9F43",border:`1px solid ${c.available?"#4CAF50":"#FF9F43"}`}}>{c.available?"AVAILABLE NOW":"PARTNERSHIP REQUIRED"}</span>
+        </div>
+        <div style={{fontSize:11,color:"#555",marginBottom:6}}>{c.by} · {c.cost}</div>
+        <div style={{fontSize:12,color:"#7070A0",lineHeight:1.5}}>{c.detail}</div>
+      </div>)}
+    </div>
+
+    <SubTitle>Architecture Recommendation — Option 2: Claude for Nonprofits</SubTitle>
+    <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:16}}>
+      {[
+        {opt:"Option 1 — Cohere",items:["Google Workspace (existing, free)","Slack Pro for Nonprofits (~$2.50/user/mo)","Cohere AI App for Slack","Cohere Catalyst Fund (credits)"],rec:false,note:"Solid option. One-time credits vs. permanent discount."},
+        {opt:"Option 2 — Claude (Recommended)",items:["Google Workspace (existing, free)","Slack Pro for Nonprofits (~$2.50/user/mo)","Claude for Nonprofits — 75% off permanently","Claude Tag in Slack — native channel member","Claude Corps fellow option (next cohort TBC — Jan 2027 target)"],rec:true,note:"Permanent 75% discount. Claude Corps Cohort 1 deadline passed (July 17). Monitor Anthropic for January 2027 cohort opening and apply immediately when announced."},
+      ].map((o,i)=><div key={i} style={{background:o.rec?N:"#141414",border:`1px solid ${o.rec?G:"#222"}`,borderRadius:12,padding:16}}>
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:10}}>
+          <div style={{fontSize:13,fontWeight:700,color:"#EEE"}}>{o.opt}</div>
+          {o.rec&&<Tag color="#0D0D0D" bg={G}>RECOMMENDED</Tag>}
+        </div>
+        {o.items.map((it,j)=><Bullet key={j}>{it}</Bullet>)}
+        <div style={{marginTop:10,fontSize:11,color:o.rec?"#B0C8D0":"#555",fontStyle:"italic"}}>{o.note}</div>
+      </div>)}
+    </div>
+
+    <Card style={{background:"linear-gradient(135deg,#180a0a,#260e0e)",border:"1px solid #FF6B6B"}}>
+      <div style={{display:"flex",gap:10,alignItems:"flex-start"}}>
+        <div style={{fontSize:24}}>⚡</div>
+        <div>
+          <div style={{fontSize:12,fontWeight:800,color:"#FF6B6B",letterSpacing:1,marginBottom:6}}>CLAUDE CORPS — APPLICATION DEADLINE: JULY 17, 2026</div>
+          <div style={{fontSize:12,color:"#CCC",lineHeight:1.6,marginBottom:8}}>Anthropic's Claude Corps places a fully trained AI fellow inside BLKOWNED for one year. Host receives a $10,000 implementation grant + $2,500 in Claude credits. Anthropic pays the fellow's $85,000 salary. BLKOWNED pays nothing. For the Community Platform 2.0, this fellow could own the entire AI integration layer — exactly the technical resource the MBA team needs to complete Phase 3.</div>
+          <div style={{fontSize:11,color:"#999"}}>Canadian org note: First cohort (October 2026) is US work-authorised. Target January 2027 cohort — but applying now builds the Anthropic relationship and secures our place in queue.</div>
+        </div>
+      </div>
+    </Card>
+  </div>;
+}
+
+function Resourcing() {
+  return <div>
+    <SectionTitle>Resourcing Strategy</SectionTitle>
+    <Body>Every element of this strategy requires more staff capacity than BLKOWNED currently has. Ashleigh cannot simultaneously run markets, coordinate a residency cohort, manage four institutional partnerships, write grant applications, track reporting deadlines, and build the AI integration layer. This must be addressed directly, not worked around.</Body>
+
+    <Card style={{borderLeft:`3px solid #FF6B6B`,background:"#141414"}}>
+      <SubTitle children="The Rule on Capacity"/>
+      <Body>Never commit to a program scope or grant reporting obligation that cannot be delivered by the team that exists at the time of commitment — not the team that might exist if a future grant comes through. Size every commitment to current capacity and scale up only when the next funding tier is confirmed. The fastest way to lose grant eligibility is a late or incomplete report.</Body>
+    </Card>
+
+    <SubTitle>Three-Phase Staffing Plan</SubTitle>
+    {[
+      {ph:"Phase 1",period:"Now – Sept 2026",color:G,items:[
+        "Apply to BOF and OTF Seed Grant to fund a part-time Grants & Program Coordinator (contract, ~20 hrs/week)",
+        "This role owns: grant calendar, reporting deadlines, application drafts, board document coordination",
+        "Monitor Anthropic for Claude Corps January 2027 cohort opening and apply immediately when announced. If successful, the Claude Corps AI Fellow acts as a free AI Program Lead",
+        "McMaster partnership formalised (pending LOI) — DeGroote carries research design, freeing Ashleigh from research admin",
+        "Salesforce.org formal grant application submitted",
+      ]},
+      {ph:"Phase 2",period:"Oct 2026 – June 2027",color:"#7C9FFF",items:[
+        "BEP Ecosystem Fund or OTF Grow Grant funds a full-time Residency Program Manager",
+        "Program Manager owns: cohort intake, mentor coordination, resident milestone tracking, outcome reporting",
+        "CanCode successor grant (if open) funds the AI Literacy Workshop series — separate budget from residency",
+        "Canada Summer Jobs funds a junior coordinator role for the summer months",
+        "Claude Corps AI Fellow in place (January 2027 cohort) — handles AI tool integration",
+      ]},
+      {ph:"Phase 3",period:"July 2027 onwards",color:"#4CAF50",items:[
+        "AI for All National AI Literacy Initiative grant funds consortium delivery — institutions carry overhead, BLKOWNED manages community relationships and resident selection",
+        "SSHRC research grant funds a McMaster-based researcher embedded in the program",
+        "Full team: ED (Ashleigh), Residency Program Manager, Grants & Compliance Coordinator, AI Program Lead or Claude Corps Fellow, Alumni Circle Coordinator (part-time)",
+        "Alumni Circle self-funds through membership fees — reduces operational dependency on grant cycle",
+      ]},
+    ].map((ph,i)=><Card key={i} style={{borderTop:`3px solid ${ph.color}`,marginBottom:12}}>
+      <div style={{display:"flex",gap:10,alignItems:"center",marginBottom:10}}>
+        <div style={{fontSize:16,fontWeight:900,color:ph.color}}>{ph.ph}</div>
+        <div style={{fontSize:11,color:"#555"}}>{ph.period}</div>
+      </div>
+      {ph.items.map((it,j)=><Bullet key={j}>{it}</Bullet>)}
+    </Card>)}
+
+    <SubTitle>The Consortium as Resourcing Strategy</SubTitle>
+    <Body>McMaster and Mohawk are not just funding partners — they are capacity partners. McMaster provides research design, academic credibility, and a mentor network of faculty and grad students. Mohawk provides applied delivery infrastructure and experience managing federal reporting requirements. Brock and Guelph provide geographic reach without requiring BLKOWNED to hire regional staff. Every institutional partner that joins reduces the BLKOWNED staff hours required to deliver at the same scale.</Body>
+  </div>;
+}
+
+function Partnerships() {
+  return <div>
+    <SectionTitle>Partnership Strategy</SectionTitle>
+    <Body>BLKOWNED needs partners in four categories, each serving a different strategic function. A partner in one tier cannot substitute for a partner in another. Managing the portfolio means actively tending relationships across all four — and understanding which ask belongs at which door.</Body>
+
+    {[
+      {tier:"Tier 1",name:"Academic Institutional Partners",color:G,icon:"🎓",
+       desc:"Deliver research credibility, provide mentor networks, satisfy federal delivery requirements, carry reporting infrastructure. Unlock Tier 2 grant funding.",
+       partners:[
+        {who:"McMaster / DeGroote",status:"Warm — deepening",ask:"Formalise LOI within 30 days. Tej's dual role as Board Chair and EiR is the bridge. Activate it formally."},
+        {who:"Mohawk College",status:"Not yet approached",ask:"Approach within 60 days. Applied delivery infrastructure + federal training rails make the consortium competitive for CanCode and AI for All."},
+        {who:"Brock University",status:"Warm connection identified",ask:"Approach within 90 days. Extends program reach into Niagara — St. Catharines."},
+        {who:"University of Guelph",status:"Warm — alumni bridge (Chris)",ask:"Approach within 90 days. Extends reach into Guelph-Wellington."},
+      ]},
+      {tier:"Tier 2",name:"Corporate Sponsors and Tech Partners",color:"#7C9FFF",icon:"🏢",
+       desc:"Provide program funding, technology access, and endorsement. A corporate partner's logo on a grant application does real work with evaluators.",
+       partners:[
+        {who:"Salesforce",status:"Existing sponsor",ask:"Convert to formal grant via Salesforce.org within 60 days. Lead with supplier pipeline pitch, not charity pitch."},
+        {who:"Anthropic",status:"Claude Corps Cohort 1 missed (July 17)",ask:"Apply immediately when January 2027 cohort opens. The $10K grant + free AI fellow is the highest-ROI medium-term partnership available."},
+        {who:"Shopify",status:"Existing partnership",ask:"Formalise e-commerce curriculum partnership. Leverage for CanCode and supply chain pitch."},
+        {who:"Microsoft / RBC / Banks",status:"Identified targets",ask:"Microsoft Philanthropies AI for Good. RBC via existing Fardeen Khan connection. Approach Q4 2026."},
+      ]},
+      {tier:"Tier 3",name:"Government Relationships",color:"#4CAF50",icon:"🏛️",
+       desc:"Pre-warm the relationships that determine grant approval. Being known before the call opens is worth more than a strong cold application after it.",
+       partners:[
+        {who:"BEP / FedDev Ontario",status:"Warm — validated application",ask:"Take BEP up on the introduction to their applications-support team within two weeks. Ask: when does the next intake open?"},
+        {who:"ISED / AI for All team",status:"Indirect via Vector",ask:"Use Vector Institute thread (Bob Zhou, Cameron Schuler) as access point to AI for All ecosystem. Build toward being named community delivery partner."},
+        {who:"OTF",status:"Not yet engaged",ask:"Request a pre-application conversation with OTF program manager before submitting Grow Grant. Standard practice; dramatically improves approval rates."},
+      ]},
+      {tier:"Tier 4",name:"Black Ecosystem Peers",color:"#FF9F43",icon:"🤝",
+       desc:"Intelligence sharing, joint advocacy, referral networks. Not competitors — the community of practice BLKOWNED belongs to and contributes to.",
+       partners:[
+        {who:"Black Opportunity Fund",status:"Applied, declined (not weakness)",ask:"Treat as co-investor, not just a grant window. Request a relationship meeting separate from any application."},
+        {who:"Federation of Black Canadians",status:"Monitor their monthly list",ask:"Subscribe. Read it the day it publishes. The FBC is the most reliable aggregator of Black-led funding in Canada."},
+        {who:"Black Builders Network",status:"Peer resource hub",ask:"Active contributor, not just consumer. Share SOS research and Trailblazer model as community resources — generates inbound partnership interest."},
+      ]},
+    ].map((tier,i)=><div key={i} style={{marginBottom:20}}>
+      <div style={{display:"flex",gap:10,alignItems:"center",marginBottom:10}}>
+        <div style={{fontSize:20}}>{tier.icon}</div>
+        <div>
+          <div style={{fontSize:11,color:tier.color,fontWeight:700,letterSpacing:1}}>{tier.tier}</div>
+          <div style={{fontSize:15,fontWeight:700,color:"#EEE"}}>{tier.name}</div>
+        </div>
+      </div>
+      <div style={{fontSize:12,color:M,marginBottom:10,paddingLeft:30}}>{tier.desc}</div>
+      {tier.partners.map((p,j)=><div key={j} style={{background:"#141414",border:"1px solid #222",borderRadius:8,padding:12,marginBottom:6,paddingLeft:30,display:"grid",gridTemplateColumns:"1.5fr 1fr 2fr",gap:10,alignItems:"start"}}>
+        <div style={{fontSize:12,fontWeight:700,color:"#DDD"}}>{p.who}</div>
+        <Tag color={p.status.includes("Warm")||p.status.includes("Existing")?"#4CAF50":p.status.includes("Monitor")?"#FF9F43":"#7C9FFF"} bg="transparent">{p.status}</Tag>
+        <div style={{fontSize:11,color:M,lineHeight:1.4}}>{p.ask}</div>
+      </div>)}
+    </div>)}
+  </div>;
+}
+
+function Financial() {
+  return <div>
+    <SectionTitle>Financial Infrastructure</SectionTitle>
+
+    <SubTitle>Should BLKOWNED Move to FLOAT?</SubTitle>
+    <Card style={{background:N,border:`1px solid ${G}40`}}>
+      <div style={{fontSize:14,fontWeight:700,color:"#4CAF50",marginBottom:8}}>Short Answer: Yes — for spend management and corporate cards, with the right supporting stack.</div>
+      <Body>Float is Canadian-built (Toronto), specifically has a nonprofit vertical, just raised an $85M Series C (June 2026), and is now a member of Payments Canada — giving them deeper banking infrastructure than they had a year ago. Ocean Wise (a Canadian nonprofit) saved 1,200+ hours in their first year using Float. BenchSci uses Float. It is purpose-built for the kind of lean-team, compliance-sensitive financial operation BLKOWNED runs.</Body>
+    </Card>
+
+    <SubTitle>What FLOAT Can Do for BLKOWNED</SubTitle>
+    <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:16}}>
+      {[
+        {t:"Corporate Cards",d:"Issue unlimited virtual and physical cards to board members and staff. Set per-card spending limits and merchant controls. No credit check, no personal guarantees. Pre-funded from your Float balance."},
+        {t:"Expense Management",d:"Automatic receipt reminders, Canadian-trained AI transaction coding at 95%+ accuracy, real-time spend tracking by category and fund. Replaces manual expense reports entirely."},
+        {t:"High-Yield Business Account",d:"Up to 4% interest on reserves — the highest available in Canadian business banking. Earn on the GIC and operational reserves while keeping funds liquid. CDIC-insured through tier-1 Canadian bank."},
+        {t:"Bill Pay + Accounting Integration",d:"Pay bills on autopilot. Sync directly to QuickBooks Online, Xero, or NetSuite. Auto-tag transactions by grant fund or program — makes grant reporting and audits dramatically faster."},
+      ].map((f,i)=><Card key={i} style={{borderLeft:`2px solid #4CAF50`}}>
+        <div style={{fontSize:12,fontWeight:700,color:"#4CAF50",marginBottom:4}}>{f.t}</div>
+        <div style={{fontSize:12,color:M,lineHeight:1.5}}>{f.d}</div>
+      </Card>)}
+    </div>
+
+    <SubTitle>What FLOAT Cannot Replace — The Full Stack</SubTitle>
+    <GTable
+      headers={[{label:"NEED",w:"1.5fr"},{label:"TOOL",w:"1fr"},{label:"WHY",w:"2fr"},{label:"COST RANGE",w:"1fr"}]}
+      rows={[
+        ["Spend management + cards","Float","Purpose-built for Canadian nonprofits. 4% yield on reserves. Audit-ready.","Free Essentials / Pro plan"],
+        ["Business account / banking","Float Business Account","Now a legitimate primary account option. Or keep a traditional bank alongside.","No monthly fees"],
+        ["Full accounting","QuickBooks Online","Integrates natively with Float. Grant project tracking. GST/HST filing.","~$50–80/mo"],
+        ["Financial statements","Local CPA firm","Required for OTF Grow, BEP, most grants above $50K. T3010 charitable return.","$3K–$8K/yr"],
+        ["Grant tracking","QuickBooks + Float tags","Float auto-tags by fund; QuickBooks tracks project budgets against grant terms.","Included"],
+        ["Payroll (when ready)","Wagepoint or Humi","Canadian-built, nonprofit-friendly. Handles T4s, source deductions, ROEs.","~$40–80/mo"],
+        ["CRA compliance","CPA firm","T3010 Annual Information Return for charities. Non-negotiable.","Included in CPA fee"],
+      ]}
+    />
+
+    <Card style={{borderLeft:`3px solid ${G}`}}>
+      <SubTitle children="The Recommended Financial Stack"/>
+      <Bullet bold>Float Business Account + corporate cards → primary banking, expense management, bill pay</Bullet>
+      <Bullet>QuickBooks Online → full accounting, grant project tracking, GST/HST, integrates with Float</Bullet>
+      <Bullet>Annual CPA engagement → reviewed financial statements, T3010 charitable return, CRA compliance</Bullet>
+      <Bullet>Wagepoint → payroll when the first staff hire is made (Phase 1 grants coordinator)</Bullet>
+      <Body>Total financial infrastructure cost: approximately $1,000–$2,000/year for Float + QuickBooks, plus $3K–$8K annually for the CPA. This is the most modern, compliant, and grant-ready financial stack available for a Canadian nonprofit at this stage.</Body>
+    </Card>
+
+    <SubTitle>Financial Clean-Up Priority List</SubTitle>
+    {[
+      ["Resolve credit card debt with GIC strategy","The $15K GIC allocation is the right move — clean balance sheet is prerequisite for larger municipal and bank-leveraged financing","Immediate"],
+      ["Open Float Business Account","Set up corporate cards for Ashleigh and board members. Tag existing expense categories by grant fund and program.","This month"],
+      ["Engage CPA for reviewed statements","Even without an active grant requiring it. Having reviewed financials on file means you can respond to a funder request in 24 hours.","Q3 2026"],
+      ["Set up QuickBooks with grant project codes","One project code per active grant. Float auto-syncs to QBO. Reporting becomes a one-click export.","Q3 2026"],
+      ["Standardise Garden Party event data","Ticket sales, demographics, sponsor visibility, outcomes. Every event produces a data package that feeds both grant reporting and sponsorship renewal.","Tonight"],
+    ].map(([item,why,when],i)=><div key={i} style={{display:"grid",gridTemplateColumns:"1.5fr 2fr 0.8fr",gap:0,background:i%2===0?"#111":"transparent",borderBottom:"1px solid #1a1a1a",padding:"9px 0"}}>
+      <div style={{fontSize:12,color:"#DDD",fontWeight:600,paddingLeft:4}}>{item}</div>
+      <div style={{fontSize:12,color:M,paddingLeft:4}}>{why}</div>
+      <div style={{fontSize:12,color:G,fontStyle:"italic",paddingLeft:4}}>{when}</div>
+    </div>)}
+  </div>;
+}
+
+function Roadmap() {
+  return <div>
+    <SectionTitle>24-Month Integrated Roadmap</SectionTitle>
+    <Body>Every action across all four strategies, sequenced to build on each other. The goal by July 2028: BLKOWNED is not grant-dependent — it is grant-competitive. Earned revenue covers operations. Grants fund program delivery at scale. Institutional partnerships carry delivery infrastructure. The community flywheel is self-sustaining.</Body>
+
+    {[
+      {period:"July – Sept 2026",phase:"Foundations",color:G,items:[
+        "Monitor Anthropic for Claude Corps January 2027 cohort — apply the day applications open",
+        "Apply to BOF and OTF Seed Grant to fund Grants & Program Coordinator",
+        "Take BEP up on offer to connect with applications-support team (within 2 weeks)",
+        "Open the McMaster LOI conversation as a near-term priority",
+        "Open Float Business Account, set up QuickBooks, engage CPA",
+        "Register or confirm CRA charitable status — start process immediately if not done",
+        "Publish board bios on website + draft annual impact report",
+        "Build and submit ERG Event Management package to BOLDforce Canada",
+        "Standardise Garden Party data into impact report template",
+      ]},
+      {period:"Oct – Dec 2026",phase:"Program Launch",color:"#7C9FFF",items:[
+        "Launch Trailblazer Residency Cohort 1 (8–12 residents)",
+        "Launch AI Literacy Workshop series (Rung 2 of program ladder)",
+        "Submit Salesforce.org formal grant — workforce development stream",
+        "Open OTF Grow Grant application (fall intake)",
+        "Begin Mohawk conversation, followed by Brock and Guelph",
+        "Submit SSHRC Partnership Engage (November 2026 deadline via McMaster)",
+        "Community Platform 2.0 build phase (MBA team active)",
+        "ERG event pipeline: target 2–4 events before year-end",
+      ]},
+      {period:"Jan – Mar 2027",phase:"Consortium + Platform",color:"#4CAF50",items:[
+        "Claude Corps AI Fellow joins (January 2027 cohort if approved)",
+        "Community Platform 2.0 launches — Disco replaced, subscription opens at $50–75/year",
+        "Submit BEP Ecosystem Fund when next Southern Ontario round opens",
+        "Complete McMaster/Mohawk consortium LOIs",
+        "RAII next intake — apply with consortium",
+        "First Trailblazer Residency milestone data captured (Q1 check-in)",
+        "Directory premium tiers launched",
+      ]},
+      {period:"Apr – Jun 2027",phase:"Evidence Build",color:"#FF9F43",items:[
+        "SSHRC research track begins with McMaster researcher",
+        "Residency Cohort 1 approaching graduation — document all business outcomes",
+        "Brock and Guelph LOIs signed",
+        "AI for All AI Literacy Initiative procurement expected — apply with full consortium",
+        "OTF Grow Grant decision expected",
+        "Supplier Pipeline Partnership pitch to 2–3 corporate targets",
+      ]},
+      {period:"Jul 2027 – Jul 2028",phase:"Compound",color:"#FF6B6B",items:[
+        "Residency Cohort 2 intake with Cohort 1 outcomes data as evidence base",
+        "Trailblazer Alumni Circle formalised and partially self-funding",
+        "BEP reapplication with consortium — stronger, with Cohort 1 results",
+        "AI for All delivery begins under consortium structure",
+        "SSHRC research generating publishable longitudinal data",
+        "Community Platform at 300+ paid subscribers",
+        "ERG event revenue at $75K–$120K annually",
+        "Full team operational: ED, Program Manager, Grants Coordinator, AI Lead, Alumni Coordinator",
+      ]},
+    ].map((ph,i)=><Card key={i} style={{borderTop:`3px solid ${ph.color}`,marginBottom:12}}>
+      <div style={{display:"flex",gap:12,alignItems:"center",marginBottom:12}}>
+        <div style={{fontSize:16,fontWeight:900,color:ph.color}}>{ph.phase}</div>
+        <div style={{fontSize:11,color:"#555"}}>{ph.period}</div>
+      </div>
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"4px 20px"}}>
+        {ph.items.map((it,j)=><Bullet key={j}>{it}</Bullet>)}
+      </div>
+    </Card>)}
+
+    <SubTitle>Success Metrics by 2028</SubTitle>
+    <Row items={[
+      {val:"2 cohorts",label:"Trailblazer Residency graduates",color:"#4CAF50"},
+      {val:"300+",label:"Community Platform subscribers",color:G},
+      {val:"$130K+",label:"Annual earned revenue",color:"#7C9FFF"},
+      {val:"3x",label:"Grant income vs. today",color:"#FF9F43"},
+    ]}/>
+  </div>;
+}
+
+const sectionMap = {
+  overview:<Overview/>, grants:<Grants/>, programs:<Programs/>, earnedrev:<EarnedRevenue/>,
+  platform:<Platform/>, resourcing:<Resourcing/>, partnerships:<Partnerships/>,
+  financial:<Financial/>, roadmap:<Roadmap/>
+};
+
+function App() {
+  const [active,setActive]=useState("overview");
+  const [menuOpen,setMenuOpen]=useState(false);
+  return <div style={{display:"flex",minHeight:"100vh",background:"#0D0D0D"}}>
+    <div className="sidebar" style={{width:220,background:"#0A0A12",borderRight:"1px solid #1a1a1a",position:"fixed",top:0,left:0,height:"100vh",overflowY:"auto",zIndex:10}}>
+      <div style={{padding:"20px 16px 12px"}}>
+        <div style={{fontSize:18,fontWeight:900,color:G}}>BLKOWNED</div>
+        <div style={{fontSize:10,color:"#556",letterSpacing:1,marginTop:2}}>BOARD STRATEGY 2026–2028</div>
+      </div>
+      <div style={{borderTop:"1px solid #1a1a1a",paddingTop:8}}>
+        {sections.map(s=><button key={s.id} onClick={()=>setActive(s.id)} style={{display:"block",width:"100%",textAlign:"left",padding:"10px 16px",background:active===s.id?N:"transparent",border:"none",borderLeft:active===s.id?`3px solid ${G}`:"3px solid transparent",color:active===s.id?"#EEE":"#666",fontSize:12,fontWeight:active===s.id?700:400,cursor:"pointer",transition:"all 0.15s"}}>{s.label}</button>)}
+      </div>
+    </div>
+    <div style={{marginLeft:220,flex:1,padding:"32px 32px 60px",maxWidth:900}}>
+      <div style={{paddingBottom:40}}>
+        {sectionMap[active]}
+      </div>
+    </div>
+  </div>;
+}
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>
